@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PublishConfigData" serverName="ljq@192.168.1.21:22">
+    <serverData>
+      <paths name="ljq@192.168.1.21:22">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/home/ljq/code/opp" local="$PROJECT_DIR$" />
+          </mappings>
+        </serverdata>
+      </paths>
+    </serverData>
+  </component>
+</project>
