@@ -144,12 +144,12 @@ def evaluate(args):
         time.sleep(args.loader_warmup)
         LOG.info('Done.')
 
-    metrics = datamodule.metrics()
+    metrics = datamodule.metrics()  # plugin > coco > cocokp > def metrics
     total_start = time.perf_counter()
     loop_start = time.perf_counter()
 
     for image_i, (pred, gt_anns, image_meta) in enumerate(prediction_loader):
-        print(gt_anns)
+        # print('pred:', pred)
         LOG.info('image %d / %d, last loop: %.3fs, images per second=%.1f',
                  image_i, len(data_loader), time.perf_counter() - loop_start,
                  image_i / max(1, (time.perf_counter() - total_start)))
