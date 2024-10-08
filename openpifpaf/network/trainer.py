@@ -325,7 +325,7 @@ class Trainer():
             batch_start = time.time()
             apply_gradients = batch_idx % self.stride_apply == 0
             loss, head_losses = self.train_batch(data, target, apply_gradients)
-            # calculate losses with fields, not bboxes. bbox ouput is in predictor.
+            # calculate losses with fields, not bboxes. bbox ouput is in predictor -> decoder
             # update epoch accumulates
             if loss is not None:
                 epoch_loss += loss

@@ -38,7 +38,7 @@ class Predictor:  # 推理
 
         self.preprocess = self._preprocess_factory()
         self.processor = decoder.factory(self.model_cpu.head_metas)  # predictor调用factory时自动返回所需的decoder函数，processor有batch函数可以调用
-
+        # output bboxes
         self.last_decoder_time = 0.0
         self.last_nn_time = 0.0
         self.total_nn_time = 0.0
@@ -127,6 +127,7 @@ class Predictor:  # 推理
                 visualizer.Base.processed_image(processed_image_batch[0])
 
             pred_batch = self.processor.batch(self.model, processed_image_batch, device=self.device)  # 调用decoder.py
+
             self.last_decoder_time = self.processor.last_decoder_time
             self.last_nn_time = self.processor.last_nn_time
             self.total_decoder_time += self.processor.last_decoder_time
@@ -137,13 +138,11 @@ class Predictor:  # 推理
             for image, pred, gt_anns, meta in \
                     zip(image_batch, pred_batch, gt_anns_batch, meta_batch):
                 LOG.info('batch %d: %s', batch_i, meta.get('file_name', 'no-file-name'))
-                print('pred', pred)
-                print('gt_anns', gt_anns)
+
                 # load the original image if necessary
                 if self.visualize_image:
                     visualizer.Base.image(image, meta=meta)
                 pred = [ann.inverse_transform(meta) for ann in pred]
-                print('pred', pred)
                 gt_anns = [ann.inverse_transform(meta) for ann in gt_anns]
                 if self.json_data:
                     pred = [ann.json_data() for ann in pred]
