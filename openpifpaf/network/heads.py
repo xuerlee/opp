@@ -327,7 +327,7 @@ class CompositeField4(HeadNetwork):
         # feature_map = x.detach().cpu().numpy()[0]
         # feature_map = np.sum(feature_map, axis=0)
         # plt.imshow(feature_map)
-        # plt.savefig('feature_map_volleyball2.jpg')
+        # plt.savefig('feature_map_cad4.jpg')
 
         x = self.dropout(x)
         x = self.conv(x)

@@ -23,13 +23,15 @@ class CocoDet(openpifpaf.datasets.DataModule):
     # cli configurable
     train_annotations = '/media/jiqqi/EAGET忆捷/数据集/COCO/annotations/instances_train2017.json'
     # val_annotations = '/media/jiqqi/EAGET忆捷/数据集/COCO/annotations/instances_val2017.json'
-    val_annotations = '/home/jiqqi/data/Volleyball/volleyball_instances.json'
+    # val_annotations = '/home/jiqqi/data/Volleyball/volleyball_instances.json'
+    val_annotations = '/home/jiqqi/data/new-new-collective/cad_instances.json'
     # train_annotations = '/home/travail/jiaqi/dataset/COCO/annotations/instances_train2017.json'
     # val_annotations = '/home/travail/jiaqi/dataset/COCO/annotations/instances_val2017.json'
     eval_annotations = val_annotations
     train_image_dir = '/media/jiqqi/EAGET忆捷/数据集/COCO/train2017/'
     # val_image_dir = '/media/jiqqi/EAGET忆捷/数据集/COCO/val2017/'
-    val_image_dir = '/media/jiqqi/新加卷/dataset/volleyball_/val_det_sel'
+    # val_image_dir = '/media/jiqqi/新加卷/dataset/volleyball_/val_det_sel'
+    val_image_dir = '/home/jiqqi/data/new-new-collective/val_det_sel'
     # train_image_dir = '/home/travail/jiaqi/dataset/COCO/train2017/'
     # val_image_dir = '/home/travail/jiaqi/dataset/COCO/val2017/'
     eval_image_dir = val_image_dir

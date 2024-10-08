@@ -73,7 +73,7 @@ class Predictor:  # 推理
                            default=True, action='store_false',
                            help='use more exact image rescaling (requires scipy)')
         group.add_argument('--volleyball-filter',
-                           default=True,
+                           default=False,
                            help='filter the detected persons out of the field')
 
     @classmethod  # Predictor.configure(args)

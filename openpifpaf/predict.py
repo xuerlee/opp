@@ -35,7 +35,7 @@ def cli():
     show.cli(parser)
     visualizer.cli(parser)
 
-    parser.add_argument('images', default=['pred_picture_joint_shuffle2k16/volleyball2.jpg'], nargs='*',
+    parser.add_argument('images', default=['pred_picture_joint_shuffle2k16/cad4.jpeg'], nargs='*',
                         help='input images')
     parser.add_argument('--glob',
                         help='glob expression for input images (for many images)')
