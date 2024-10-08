@@ -89,11 +89,11 @@ class CifDet(Decoder):
         boxes_np[:, 2:] -= boxes_np[:, :2]  # convert to xywh
 
         # filter non-important persons -> filter in output step (predictor...or annotation) with w and h
-        # boxes_np = boxes_np[(boxes_np[:, 1] > self.filter_th) & ((boxes_np[:, 1] + boxes_np[:, 3]) < self.filter_bh)]
-        # boxes_np = boxes_np[(boxes_np[:, 1] + boxes_np[:, 3] > 435) & ((boxes_np[:, 1] + boxes_np[:, 3]) < 640)]
-        # boxes_np = boxes_np[(boxes_np[:, 1] + boxes_np[:, 3] > 600) & ((boxes_np[:, 1] + boxes_np[:, 3]) < 1000)]
-
+        # boxes_np = boxes_np[(boxes_np[:, 1] > self.filter_th) and ((boxes_np[:, 1] + boxes_np[:, 3]) < self.filter_bh)]
+        # boxes_np = boxes_np[(boxes_np[:, 1] + boxes_np[:, 3] > 435) and ((boxes_np[:, 1] + boxes_np[:, 3]) < 640)]
+        # boxes_np = boxes_np[(boxes_np[:, 1] + boxes_np[:, 3] > 600) and ((boxes_np[:, 1] + boxes_np[:, 3]) < 1000)]
         for category, score, box in zip(categories, scores, boxes_np):
+            # tensor with 1 dimension, 1 dimension, numpy array with (:,4) dimension
             ann = AnnotationDet(self.metas[0].categories)
             ann.set(int(category), float(score), box)
             annotations_py.append(ann)

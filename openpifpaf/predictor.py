@@ -72,8 +72,11 @@ class Predictor:  # 推理
         group.add_argument('--precise-rescaling', dest='fast_rescaling',
                            default=True, action='store_false',
                            help='use more exact image rescaling (requires scipy)')
+        group.add_argument('--volleyball-filter',
+                           default=True,
+                           help='filter the detected persons out of the field')
 
-    @classmethod
+    @classmethod  # Predictor.configure(args)
     def configure(cls, args: argparse.Namespace):
         """Configure from command line parser."""
         cls.batch_size = args.batch_size
@@ -81,6 +84,7 @@ class Predictor:  # 推理
         cls.fast_rescaling = args.fast_rescaling
         cls.loader_workers = args.loader_workers
         cls.long_edge = args.long_edge
+        cls.volleyball_filter = args.volleyball_filter  # same as 'self.'
 
     def _preprocess_factory(self):  # 图像处理
         rescale_t = None
@@ -115,7 +119,7 @@ class Predictor:  # 推理
 
         yield from self.dataloader(dataloader)  # -> enumerated_dataloader -> processor -> decoder
 
-    def enumerated_dataloader(self, enumerated_dataloader):
+    def enumerated_dataloader(self, enumerated_dataloader):  # meta info is in dataloader
         """Predict from an enumerated dataloader."""
         for batch_i, item in enumerated_dataloader:
             if len(item) == 3:
@@ -126,8 +130,7 @@ class Predictor:  # 推理
             if self.visualize_processed_image:
                 visualizer.Base.processed_image(processed_image_batch[0])
 
-            pred_batch = self.processor.batch(self.model, processed_image_batch, device=self.device)  # 调用decoder.py
-
+            pred_batch = self.processor.batch(self.model, processed_image_batch, device=self.device)  # 调用decoder.py, output a list of cls obj in annotation.py
             self.last_decoder_time = self.processor.last_decoder_time
             self.last_nn_time = self.processor.last_nn_time
             self.total_decoder_time += self.processor.last_decoder_time
@@ -135,16 +138,39 @@ class Predictor:  # 推理
             self.total_images += len(processed_image_batch)
 
             # un-batch
-            for image, pred, gt_anns, meta in \
-                    zip(image_batch, pred_batch, gt_anns_batch, meta_batch):
+            for image, pro_image, pred, gt_anns, meta in \
+                    zip(image_batch, processed_image_batch, pred_batch, gt_anns_batch, meta_batch):
                 LOG.info('batch %d: %s', batch_i, meta.get('file_name', 'no-file-name'))
-
+                # pred is also a list of cls obj (each detected person is an obj)
                 # load the original image if necessary
                 if self.visualize_image:
                     visualizer.Base.image(image, meta=meta)
+
+                # filter the persons out of the filed
+                if self.volleyball_filter:
+                    pred_ini = pred
+                    pred = []
+                    for ann in pred_ini:
+                        if ann.__class__.__name__ == 'AnnotationDet':
+                            w, h = meta['width_height'][0], meta['width_height'][1]
+                            pro_h, pro_w = pro_image.size(1), pro_image.size(2)
+                            h_ratio = h / pro_h
+                            w_ratio = w / pro_w
+                            ann_data = ann.json_data()
+                            bbox = ann_data['bbox']
+                            if h == 720:
+                                if (h_ratio * (bbox[1] + bbox[3]) > 435) and (h_ratio * (bbox[1] + bbox[3]) < 680):
+                                    pred.append(ann)
+                            elif h == 1080:
+                                if (h_ratio * (bbox[1] + bbox[3]) > 600) and (h_ratio * (bbox[1] + bbox[3]) < 1000):
+                                    pred.append(ann)
+                        else:
+                            pred.append(ann)
+                    # print(pred)
+
                 pred = [ann.inverse_transform(meta) for ann in pred]
                 gt_anns = [ann.inverse_transform(meta) for ann in gt_anns]
-                if self.json_data:
+                if self.json_data:  # parse the annotation obj
                     pred = [ann.json_data() for ann in pred]
 
                 yield pred, gt_anns, meta

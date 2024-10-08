@@ -5,7 +5,7 @@ import numpy as np
 from openpifpaf import headmeta, utils
 
 
-class Base:
+class Base:  # Defining a Common Interface, each childcls that inherits Basecls should have the following methods in Base
     def inverse_transform(self, meta):
         raise NotImplementedError
 
@@ -238,7 +238,6 @@ class AnnotationDet(Base):
             'score': max(0.001, round(float(self.score), 3)),
             'bbox': [round(float(c), coordinate_digits) for c in self.bbox],
         }
-
     def inverse_transform(self, meta):
         ann = copy.deepcopy(self)
 
@@ -257,7 +256,6 @@ class AnnotationDet(Base):
             ann.bbox[0] = -(ann.bbox[0] + ann.bbox[2]) - 1.0 + w
 
         return ann
-
 
 class AnnotationCrowd(Base):
     def __init__(self, categories):
