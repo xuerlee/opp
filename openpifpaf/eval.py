@@ -136,7 +136,7 @@ def evaluate(args):
     datamodule = datasets.factory(args.dataset)
     predictor = Predictor(head_metas=datamodule.head_metas)
 
-    data_loader = datamodule.eval_loader()
+    data_loader = datamodule.eval_loader()  # processed images by _eval_preprocess() (not the initial image size)
     # data_loader = datamodule.val_loader()
     prediction_loader = predictor.enumerated_dataloader(enumerate(data_loader))
     if args.loader_warmup:
