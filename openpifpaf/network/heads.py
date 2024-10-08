@@ -5,6 +5,7 @@ import functools
 import logging
 import math
 import matplotlib.pyplot as plt
+import numpy as np
 import torch
 from openpifpaf import headmeta
 
@@ -321,7 +322,13 @@ class CompositeField4(HeadNetwork):
     def sparse_task_parameters(self):
         return [self.conv.weight]
 
-    def forward(self, x):  # pylint: disable=arguments-differ
+    def forward(self, x):  # pylint: disable=arguments-differ  # the inference flow (basenet -> heads) are defined in nets.py
+        # torch.size(1, 1392, 46, 81)
+        # feature_map = x.detach().cpu().numpy()[0]
+        # feature_map = np.sum(feature_map, axis=0)
+        # plt.imshow(feature_map)
+        # plt.savefig('feature_map_volleyball2.jpg')
+
         x = self.dropout(x)
         x = self.conv(x)
         # upscale

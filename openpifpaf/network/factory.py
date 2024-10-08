@@ -318,7 +318,7 @@ class Factory(Configurable):
         if self.base_name:
             assert head_metas
             assert self.checkpoint is None
-            net_cpu: nets.Shell = self.from_scratch(head_metas)  # 定义骨干和头网络
+            net_cpu: nets.Shell = self.from_scratch(head_metas)  # 定义骨干和头网络的特征传递顺序
             net_cpu = self.init_net(net_cpu)
             epoch = 0
             return net_cpu, epoch
@@ -413,7 +413,7 @@ class Factory(Configurable):
             raise Exception('basenet {} unknown'.format(self.base_name))
 
         basenet = BASE_FACTORIES[self.base_name]()
-        headnets = [HEADS[h.__class__](h, basenet.out_features) for h in head_metas]  # 定义骨干网络和头网络
+        headnets = [HEADS[h.__class__](h, basenet.out_features) for h in head_metas]  # 定义骨干网络和头网络 base net outfearures -> head
         # head_metas为两个CompositeField4中的卷积定义
         net_cpu = nets.Shell(basenet, headnets)  # 连接骨干网络和头网络 连接到network/net.py,设计输出，设计整个网络的foward顺序。
         nets.model_defaults(net_cpu)

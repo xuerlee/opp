@@ -189,6 +189,7 @@ class Trainer():
         # train encoder
         with torch.autograd.profiler.record_function('model'):
             outputs = self.model(data, head_mask=[t is not None for t in targets])
+            # the inference flow (basenet -> heads) are defined in nets.py
             # train different dataset alternatively (loss mask)
             if self.train_profile and self.device.type != 'cpu':
                 torch.cuda.synchronize()
