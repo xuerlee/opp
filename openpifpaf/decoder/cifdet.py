@@ -88,7 +88,7 @@ class CifDet(Decoder):
         boxes_np = boxes.numpy()
         boxes_np[:, 2:] -= boxes_np[:, :2]  # convert to xywh
 
-        # filter non-important persons -> filter in output step (predictor...) with w and h
+        # filter non-important persons -> filter in output step (predictor...or annotation) with w and h
         # boxes_np = boxes_np[(boxes_np[:, 1] > self.filter_th) & ((boxes_np[:, 1] + boxes_np[:, 3]) < self.filter_bh)]
         # boxes_np = boxes_np[(boxes_np[:, 1] + boxes_np[:, 3] > 435) & ((boxes_np[:, 1] + boxes_np[:, 3]) < 640)]
         # boxes_np = boxes_np[(boxes_np[:, 1] + boxes_np[:, 3] > 600) & ((boxes_np[:, 1] + boxes_np[:, 3]) < 1000)]
