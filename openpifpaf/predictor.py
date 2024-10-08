@@ -122,10 +122,10 @@ class Predictor:  # 推理
     def enumerated_dataloader(self, enumerated_dataloader):  # meta info is in dataloader
         """Predict from an enumerated dataloader."""
         for batch_i, item in enumerated_dataloader:
-            if len(item) == 3:
+            if len(item) == 3:  # eval, processed by _eval_preprocess()
                 processed_image_batch, gt_anns_batch, meta_batch = item
                 image_batch = [None for _ in processed_image_batch]
-            elif len(item) == 4:
+            elif len(item) == 4:  # predict, processed by def images(self, file_names, **kwargs) in this class
                 image_batch, processed_image_batch, gt_anns_batch, meta_batch = item
             if self.visualize_processed_image:
                 visualizer.Base.processed_image(processed_image_batch[0])

@@ -239,7 +239,7 @@ def local_checkpoint_path(checkpoint):
         if os.path.exists(file_name):
             return file_name
 
-    return None0
+    return None
 
 
 class Factory(Configurable):
@@ -247,10 +247,10 @@ class Factory(Configurable):
     # base_name = 'shufflenetv2k16'  # 骨干网络
     # base_name = 'mobilenetv3large'  # 骨干网络
     # checkpoint = '/home/ljq/code/opp/openpifpaf/outputs_mobilepre/mobilenetv3small-220726-111537-cocodet-cocokp.pkl.epoch111'  # 从预训练模型中获取网络架构
-    # checkpoint = '/home/travail/jiaqi/code/opp/openpifpaf/output_test/shufflenetv2k16-240831-011733-cocokp-cocodet.pkl.epoch272'  # 从预训练模型中获取网络架构
-    # checkpoint = '/home/travail/jiaqi/code/opp/openpifpaf/output_test/shufflenetv2k30-240929-032802-cocojoint.pkl.epoch213'  # 从预训练模型中获取网络架构
+    # checkpoint = 'output_test/shufflenetv2k16-240831-011733-cocokp-cocodet.pkl.epoch272'  # 从预训练模型中获取网络架构
+    checkpoint = 'output_test/shufflenetv2k16-241005-014657-cocojoint.pkl.epoch262'  # 从预训练模型中获取网络架构
     # checkpoint = 'checkpoint/shufflenetv2k16-210820-232500-cocokp-slurm726069-edge513-o10s-7189450a.pkl'  # 从预训练模型中获取网络架构
-    checkpoint = 'shufflenetv2k16'  # 从预训练模型中获取网络架构
+    # checkpoint = 'shufflenetv2k16'  # 从预训练模型中获取网络架构
     # checkpoint = 'checkpoint/mobilenetv3small-210822-215020-cocodet-slurm726253-5f2c894f.pkl'  # 从预训练模型中获取网络架构
     # checkpoint = 'shufflenetv2k30'  # 从预训练模型中获取网络架构
     # checkpoint = None

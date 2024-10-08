@@ -28,8 +28,8 @@ class DataModule:
     """
 
     #: Data loader batch size.
-    batch_size = 16
-    # batch_size = 1
+    # batch_size = 16
+    batch_size = 1
 
     #: Data loader number of workers.
     _loader_workers = None

@@ -30,21 +30,21 @@ class CocoKpDet(openpifpaf.datasets.DataModule, openpifpaf.Configurable):
     _test2017_image_dir = 'data-mscoco/images/test2017/'
 
     # cli configurable
-    # train_kp_annotations = '/media/jiqqi/EAGET忆捷/数据集/COCO/annotations/person_keypoints_train2017.json'
-    # val_kp_annotations = '/media/jiqqi/EAGET忆捷/数据集/COCO/annotations/person_keypoints_val2017.json'
-    # train_det_annotations = '/media/jiqqi/EAGET忆捷/数据集/COCO/annotations/instances_train2017.json'
-    # val_det_annotations = '/media/jiqqi/EAGET忆捷/数据集/COCO/annotations/instances_val2017.json'
-    train_kp_annotations = '/home/travail/jiaqi/dataset/COCO/annotations/person_keypoints_train2017.json'
-    val_kp_annotations = '/home/travail/jiaqi/dataset/COCO/annotations/person_keypoints_val2017.json'
-    train_det_annotations = '/home/travail/jiaqi/dataset/COCO/annotations/instances_train2017.json'
-    val_det_annotations = '/home/travail/jiaqi/dataset/COCO/annotations/instances_val2017.json'
+    train_kp_annotations = '/media/jiqqi/EAGET忆捷/数据集/COCO/annotations/person_keypoints_train2017.json'
+    val_kp_annotations = '/media/jiqqi/EAGET忆捷/数据集/COCO/annotations/person_keypoints_val2017.json'
+    train_det_annotations = '/media/jiqqi/EAGET忆捷/数据集/COCO/annotations/instances_train2017.json'
+    val_det_annotations = '/media/jiqqi/EAGET忆捷/数据集/COCO/annotations/instances_val2017.json'
+    # train_kp_annotations = '/home/travail/jiaqi/dataset/COCO/annotations/person_keypoints_train2017.json'
+    # val_kp_annotations = '/home/travail/jiaqi/dataset/COCO/annotations/person_keypoints_val2017.json'
+    # train_det_annotations = '/home/travail/jiaqi/dataset/COCO/annotations/instances_train2017.json'
+    # val_det_annotations = '/home/travail/jiaqi/dataset/COCO/annotations/instances_val2017.json'
 
     eval_kp_annotations = val_kp_annotations
     eval_det_annotations = val_det_annotations
-    # train_image_dir = '/media/jiqqi/EAGET忆捷/数据集/COCO/train2017/'
-    # val_image_dir = '/media/jiqqi/EAGET忆捷/数据集/COCO/val2017/'
-    train_image_dir = '/home/travail/jiaqi/dataset/COCO/train2017/'
-    val_image_dir = '/home/travail/jiaqi/dataset/COCO/val2017/'
+    train_image_dir = '/media/jiqqi/EAGET忆捷/数据集/COCO/train2017/'
+    val_image_dir = '/media/jiqqi/EAGET忆捷/数据集/COCO/val2017/'
+    # train_image_dir = '/home/travail/jiaqi/dataset/COCO/train2017/'
+    # val_image_dir = '/home/travail/jiaqi/dataset/COCO/val2017/'
     eval_image_dir = val_image_dir
 
     square_edge_kp = 385
