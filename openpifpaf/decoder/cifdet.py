@@ -15,10 +15,18 @@ LOG = logging.getLogger(__name__)
 
 class CifDet(Decoder):
     iou_threshold = 0.5
-    instance_threshold = 0.15
+    instance_threshold = 0.15  # confidence score threshold
     nms_by_category = True
     occupancy_visualizer = visualizer.Occupancy()
-    suppression = 0.1
+    suppression = 0.1  # NMS threshold
+
+    # non-important persons filter
+    # can be called directly by 'self.'
+    # filter_lw = 0
+    # filter_rw = 0
+    # filter_th = 280
+    # filter_bh = 700
+
 
     def __init__(self, head_metas: List[headmeta.CifDet], *, visualizers=None):
         super().__init__()
@@ -69,14 +77,22 @@ class CifDet(Decoder):
         categories = categories[filter_mask]
         scores = scores[filter_mask]
         boxes = boxes[filter_mask]
+
         LOG.debug('cpp annotations = %d (%.1fms)',
                   len(scores),
                   (time.perf_counter() - start) * 1000.0)
 
         # convert to py
+        # packed as annotation object (dict)
         annotations_py = []
         boxes_np = boxes.numpy()
         boxes_np[:, 2:] -= boxes_np[:, :2]  # convert to xywh
+
+        # filter non-important persons -> filter in output step (predictor...) with w and h
+        # boxes_np = boxes_np[(boxes_np[:, 1] > self.filter_th) & ((boxes_np[:, 1] + boxes_np[:, 3]) < self.filter_bh)]
+        # boxes_np = boxes_np[(boxes_np[:, 1] + boxes_np[:, 3] > 435) & ((boxes_np[:, 1] + boxes_np[:, 3]) < 640)]
+        # boxes_np = boxes_np[(boxes_np[:, 1] + boxes_np[:, 3] > 600) & ((boxes_np[:, 1] + boxes_np[:, 3]) < 1000)]
+
         for category, score, box in zip(categories, scores, boxes_np):
             ann = AnnotationDet(self.metas[0].categories)
             ann.set(int(category), float(score), box)
