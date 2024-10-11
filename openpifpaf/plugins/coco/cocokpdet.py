@@ -268,8 +268,8 @@ class CocoKpDet(openpifpaf.datasets.DataModule, openpifpaf.Configurable):
                 openpifpaf.transforms.Blur(), self.blur),
             openpifpaf.transforms.RandomChoice(
                 [openpifpaf.transforms.RotateBy90(),
-                #  openpifpaf.transforms.RotateUniform(30.0)],
-                # [self.orientation_invariant, 0.4],   # no influence on image size
+                 #  openpifpaf.transforms.RotateUniform(30.0)],
+                 # [self.orientation_invariant, 0.4],   # no influence on image size
                  openpifpaf.transforms.RotateUniform(10.0)],
                 [self.orientation_invariant, 0.2],  # using params in det augmentation
             ), # rotate by a random angle uniformly drawn from a given angle range

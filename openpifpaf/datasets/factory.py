@@ -21,8 +21,8 @@ def factory(dataset):
 def cli(parser):
     group = parser.add_argument_group('generic data module parameters')
     # group.add_argument('--dataset', default='cocokp-cocodet')
-    # group.add_argument('--dataset', default='cocojoint')
-    group.add_argument('--dataset', default='cocodet')
+    group.add_argument('--dataset', default='cocojoint')
+    # group.add_argument('--dataset', default='cocodet')
     group.add_argument('--loader-workers',
                        default=None, type=int,
                        help='number of workers for data loading')
