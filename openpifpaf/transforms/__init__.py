@@ -5,16 +5,16 @@ import torchvision
 from . import pair
 from .annotations import AnnotationJitter, NormalizeAnnotations
 from .assertion import Assert
-from .compose import Compose
+from .compose import Compose, Compose_FM
 from .crop import Crop
 from .deinterlace import Deinterlace
 from .encoders import Encoders
 from .hflip import HFlip
-from .image import Blur, HorizontalBlur, ImageTransform, JpegCompression
+from .image import Blur, HorizontalBlur, ImageTransform, JpegCompression, ImageTransform_FM
 from .impute import AddCrowdForIncompleteHead
 from .minsize import MinSize
 from .multi_scale import MultiScale
-from .pad import CenterPad, CenterPadTight, SquarePad
+from .pad import CenterPad, CenterPadTight, SquarePad, CenterPadTight_FM
 from .preprocess import Preprocess
 from .random import DeterministicEqualChoice, RandomApply, RandomChoice
 from .rotate import RotateBy90, RotateUniform
@@ -22,6 +22,13 @@ from .scale import RescaleAbsolute, RescaleRelative, ScaleMix
 from .toannotations import ToAnnotations, ToCrowdAnnotations, ToDetAnnotations, ToKpAnnotations
 from .unclipped import UnclippedArea, UnclippedSides
 
+FM_TRANSFORM = Compose_FM([
+    ImageTransform_FM(torchvision.transforms.ToTensor()),
+    ImageTransform_FM(
+        torchvision.transforms.Normalize(mean=[0.485, 0.456, 0.406],
+                                         std=[0.229, 0.224, 0.225]),
+    ),
+])
 
 EVAL_TRANSFORM = Compose([
     NormalizeAnnotations(),
@@ -57,7 +64,7 @@ __all__ = [
     'AddCrowdForIncompleteHead',
     'MinSize',
     'MultiScale',
-    'CenterPad', 'CenterPadTight', 'SquarePad',
+    'CenterPad', 'CenterPadTight', 'CenterPadTight_FM', 'SquarePad',
     'DeterministicEqualChoice', 'RandomApply', 'RandomChoice',
     'RotateBy90', 'RotateUniform',
     'RescaleAbsolute', 'RescaleRelative', 'ScaleMix',

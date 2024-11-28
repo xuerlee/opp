@@ -5,7 +5,7 @@ import numpy as np
 import PIL
 import torch
 
-from .preprocess import Preprocess
+from .preprocess import Preprocess, Preprocess_FM
 
 try:
     import scipy
@@ -23,6 +23,17 @@ class ImageTransform(Preprocess):
     def __call__(self, image, anns, meta):
         image = self.image_transform(image)
         return image, anns, meta
+
+class ImageTransform_FM(Preprocess_FM):
+    """Transform image without modifying annotations or meta."""
+    def __init__(self, image_transform):
+        self.image_transform = image_transform
+
+    def __call__(self, image):
+        # img = image[0]
+
+        image = self.image_transform(image)
+        return image
 
 
 class JpegCompression(Preprocess):

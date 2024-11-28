@@ -30,7 +30,7 @@ def cli():
 
     decoder.cli(parser)
     logger.cli(parser)
-    network.Factory.cli(parser)  # 初始化网络 直接在network的函数中定义了
+    network.Factory.cli(parser)  # 初始化网络 直接在network的函数中定义了, Predictor 会自动从配置好的 network 和 decoder 中获取设置
     Predictor.cli(parser)
     show.cli(parser)
     visualizer.cli(parser)
@@ -62,7 +62,7 @@ def cli():
 
     decoder.configure(args)
     network.Factory.configure(args)
-    Predictor.configure(args)
+    Predictor.configure(args)  # args in the predictor class
     show.configure(args)  # 画的粗细字体颜色等
     visualizer.configure(args)  # 如何显示出来
 
@@ -108,8 +108,30 @@ def main():
     predictor = Predictor(  # 推理
         visualize_image=(args.show or args.image_output is not None),
         visualize_processed_image=args.debug,
-    )
+    )  # in predictor class, network.Factory().factory(head_metas=head_metas) load models from weights
+    # Predictor 会自动从配置好的 network 和 decoder 中获取设置
+    '''
+    全局工厂模式：
+    network.Factory 是一个工厂类，其配置是全局的。
+    当 network.Factory.configure(args) 执行时，它修改了 Factory 类的全局属性，例如 checkpoint 或其他相关参数。
+    之后，当 Predictor 实例化时，调用 network.Factory().factory() 会使用全局配置，返回已经按照 args 配置好的模型。
+    network folder: init.py + factory.py(class Factory)
+    '''
     for pred, _, meta in predictor.images(args.images):  # 预测结果显示
+        '''  
+        yield循环：
+        predictor.images (ImageList, preprocess) 
+        output from the called iterator 'predictor.dataset' which generated a Dataloader
+        output from the called iterator 'predictor.dataloader(Dataloader)'
+        output from the called iterator 'predictor.enumerated_dataloader(enumerate(Dataloader))' with a for iterator which output pred, gt, meta
+        
+        the input images are precessed, packed by Dataloader, and enumerated by enumerated_dataloader
+        finally output a packed list with pred, gt, meta, which can be iterately called by 'next' method
+        
+        if the batch size is 1, only put 1 image in to the dataloader and generate a dataloader with only 1 image there.
+        
+        make predicting with batch size and the decoding process easier
+        '''
         # json output
         if args.json_output is not None:
             json_out_name = out_name(

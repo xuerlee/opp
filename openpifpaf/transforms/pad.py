@@ -5,7 +5,7 @@ import logging
 import torch
 import torchvision
 
-from .preprocess import Preprocess
+from .preprocess import Preprocess, Preprocess_FM
 
 LOG = logging.getLogger(__name__)
 
@@ -106,6 +106,42 @@ class CenterPadTight(Preprocess):
             ann['bbox'][1] += ltrb[1]
 
         return image, anns, ltrb
+
+class CenterPadTight_FM(Preprocess_FM):
+    def __init__(self, multiple):
+        self.multiple = multiple
+
+    def __call__(self, image):
+
+        LOG.debug('valid area before pad: %s, image size = %s', image.size)
+        image = self.center_pad(image)
+        LOG.debug('valid area after pad: %s, image size = %s', image.size)
+
+        return image
+
+    def center_pad(self, image):
+        w, h = image.size
+        target_width = math.ceil((w - 1) / self.multiple) * self.multiple + 1
+        target_height = math.ceil((h - 1) / self.multiple) * self.multiple + 1
+
+        left = int((target_width - w) / 2.0)
+        top = int((target_height - h) / 2.0)
+        left = max(0, left)
+        top = max(0, top)
+
+        right = target_width - w - left
+        bottom = target_height - h - top
+        right = max(0, right)
+        bottom = max(0, bottom)
+        ltrb = (left, top, right, bottom)
+        LOG.debug('pad with %s', ltrb)
+
+        # pad image
+        image = torchvision.transforms.functional.pad(
+            image, ltrb, fill=(124, 116, 104))
+
+
+        return image
 
 
 class SquarePad(Preprocess):

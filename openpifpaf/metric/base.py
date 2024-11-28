@@ -1,4 +1,5 @@
 class Base:
+    # an abstract base class which forces the subclass obey the standard defined in base class
     def accumulate(self, predictions, image_meta, *, ground_truth=None):
         """For every image, accumulate that image's predictions into this metric.
 
