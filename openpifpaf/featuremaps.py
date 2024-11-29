@@ -38,8 +38,8 @@ def cli():
 
     # parser.add_argument('images', default=['pred_picture_joint_shuffle2k16/cad4.jpeg'], nargs='*',
     #                     help='input images')
-    parser.add_argument('input_folder', default='/home/jiqqi/data/new-new-collective/img_with_anns', nargs='*', help='Input folder containing images')  # nargs='*' 允许该参数接受零个或多个值，使得输入的参数变得非必需。
-    parser.add_argument('output_folder', default='/home/jiqqi/data/new-new-collective/img_with_anns_fm', nargs='*', help='Output folder to save feature maps' )
+    parser.add_argument('input_folder', default='/home/jiqqi/data/new-new-collective/img_for_fm', nargs='*', help='Input folder containing images')  # nargs='*' 允许该参数接受零个或多个值，使得输入的参数变得非必需。
+    parser.add_argument('output_folder', default='/home/jiqqi/data/new-new-collective/img_for_fm_fm', nargs='*', help='Output folder to save feature maps' )
     # parser.add_argument('--glob',
     #                     help='glob expression for input images (for many images)')
     # parser.add_argument('-o', '--image-output', default=True, nargs='?', const=True,
@@ -96,33 +96,36 @@ def extract_and_save_feature_maps(model, input_folder, output_folder, device):
     ])
 
     for image_path in glob.glob(os.path.join(input_folder, '*')):
-        try:
-            with open(image_path, 'rb') as f:
-                image = PIL.Image.open(f).convert('RGB')
-                input_tensor = transform(image)[0].unsqueeze(0).to(device)
+        if image_path.split('.')[1] == 'txt':
+            continue
+        else:
+            try:
+                with open(image_path, 'rb') as f:
+                    image = PIL.Image.open(f).convert('RGB')
+                    input_tensor = transform(image)[0].unsqueeze(0).to(device)
 
-            # Extract features
-            with torch.no_grad():
-                feature_map = model.base_net(input_tensor)
-            '''
-            print(feature_map.size()) torch.Size([1, 1392, 31, 46])
-            '''
-            # feature = feature_map.cpu().numpy()[0]
-            # feature = np.sum(feature, axis=0)
-            # plt.imshow(feature)
-            # plt.show()
+                # Extract features
+                with torch.no_grad():
+                    feature_map = model.base_net(input_tensor)
+                '''
+                print(feature_map.size()) torch.Size([1, 1392, 31, 46])
+                '''
+                # feature = feature_map.cpu().numpy()[0]
+                # feature = np.sum(feature, axis=0)
+                # plt.imshow(feature)
+                # plt.show()
 
-            # Convert feature map to CPU and save
-            feature_map = feature_map.cpu().numpy()
+                # Convert feature map to CPU and save
+                feature_map = feature_map.cpu().numpy()
 
-            feature_map_save_path = os.path.join(
-                output_folder, os.path.basename(image_path).replace('.jpg', '_features.pt')
-            )
-            torch.save(feature_map, feature_map_save_path)
-            LOG.info(f"Saved feature map to {feature_map_save_path}")
-        #
-        except Exception as e:
-            LOG.error(f"Failed to process image {image_path}: {e}")
+                feature_map_save_path = os.path.join(
+                    output_folder, os.path.basename(image_path).replace('.jpg', '_features.pt')
+                )
+                torch.save(feature_map, feature_map_save_path)
+                LOG.info(f"Saved feature map to {feature_map_save_path}")
+            #
+            except Exception as e:
+                LOG.error(f"Failed to process image {image_path}: {e}")
 
 
 
@@ -157,7 +160,15 @@ def main():
     model, _ = network.Factory().factory()
     model.to(args.device)
     model.eval()
-    extract_and_save_feature_maps(model, args.input_folder, args.output_folder, args.device)
+    # extract_and_save_feature_maps(model, args.input_folder, args.output_folder, args.device)
+
+    if not os.path.exists(args.output_folder):
+        os.makedirs(args.output_folder)
+    seqs = os.listdir(args.input_folder)
+    for seq in seqs:
+        input_folder = os.path.join(args.input_folder, seq)
+        output_folder = os.path.join(args.output_folder, seq)
+        extract_and_save_feature_maps(model, input_folder, output_folder, args.device)
 
 if __name__ == '__main__':
     os.environ["QT_QPA_PLATFORM"] = "offscreen"
