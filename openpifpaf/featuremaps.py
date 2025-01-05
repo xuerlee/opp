@@ -123,7 +123,6 @@ def extract_and_save_feature_maps(model, input_folder, output_folder, device):
                 )
                 torch.save(feature_map, feature_map_save_path)
                 LOG.info(f"Saved feature map to {feature_map_save_path}")
-            #
             except Exception as e:
                 LOG.error(f"Failed to process image {image_path}: {e}")
 
